@@ -1,5 +1,7 @@
 # JiudingBot
 
+[![CI](https://github.com/bolovemei99-code/JiudingBot/actions/workflows/ci.yml/badge.svg)](https://github.com/bolovemei99-code/JiudingBot/actions/workflows/ci.yml)
+
 ## 代理模式（Proxy Pattern）示例
 
 仓库新增了一个代理模式示例集合，路径：`examples/`

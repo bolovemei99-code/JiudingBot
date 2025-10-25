@@ -36,7 +36,12 @@ jobs:
         working-directory: examples/typescript
         run: npm ci
 
-      - name: Run TypeScript example (compile & run)
+      - name: Build TypeScript (tsc)
+        working-directory: examples/typescript
+        run: |
+          npx tsc --noEmit
+
+      - name: Run TypeScript example
         working-directory: examples/typescript
         run: |
           npx ts-node proxy.ts
