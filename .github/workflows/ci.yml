@@ -40,3 +40,14 @@ jobs:
         working-directory: examples/typescript
         run: |
           npx ts-node proxy.ts
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build and run Java example
+        run: |
+          javac -d examples/java examples/java/ProxyExample.java
+          java -cp examples/java ProxyExample
