@@ -1,0 +1,1 @@
+{"build":{"builder":"PYTHON","buildCommand":"pip install -r requirements.txt"},"start":{"command":"python main.py"},"envs":{"BOT_TOKEN":"7263013347:AAFGaRqixDkGz4YZJyFA4PmQXKNJMAj236k"}}
