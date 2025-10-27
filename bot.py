@@ -2,6 +2,7 @@ import logging
 import sqlite3
 from datetime import datetime
 import random
+import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
@@ -54,6 +55,8 @@ async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     conn = sqlite3.connect("users.db")
     c = conn.cursor()
+    c.execute("INSERT OR IGNORE INTO users (user_id, messages, last_active, vip_status) VALUES (?, ?, ?, ?)",
+              (user_id, 0, datetime.now().isoformat(), 0))
     c.execute("UPDATE users SET messages = messages + 1, last_active = ? WHERE user_id = ?",
               (datetime.now().isoformat(), user_id))
     conn.commit()
@@ -82,7 +85,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         c.execute("SELECT messages, last_active, vip_status FROM users WHERE user_id = ?", (user_id,))
         stats = c.fetchone()
         conn.close()
-        stats_text = f"你的统计：\n消息数: {stats[0]}\n最后活跃: {stats[1]}\nVIP状态: {'是' if stats[2] else '否'}"
+        if stats is None:
+            stats_text = "你还没有注册，请先发送 /start 命令！"
+        else:
+            stats_text = f"你的统计：\n消息数: {stats[0]}\n最后活跃: {stats[1]}\nVIP状态: {'是' if stats[2] else '否'}"
         await query.edit_message_text(stats_text)
 
 # 支付确认
@@ -90,6 +96,8 @@ async def confirm_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     conn = sqlite3.connect("users.db")
     c = conn.cursor()
+    c.execute("INSERT OR IGNORE INTO users (user_id, messages, last_active, vip_status) VALUES (?, ?, ?, ?)",
+              (user_id, 0, datetime.now().isoformat(), 0))
     c.execute("UPDATE users SET vip_status = 1, messages = messages + 1, last_active = ? WHERE user_id = ?",
               (datetime.now().isoformat(), user_id))
     conn.commit()
@@ -98,8 +106,15 @@ async def confirm_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # 主函数
 def main():
+    # Get token from environment variable with fallback
+    bot_token = os.environ.get('BOT_TOKEN', TOKEN)
+    
+    # Raise error if token is empty
+    if not bot_token:
+        raise RuntimeError("Bot token not provided! Please set BOT_TOKEN environment variable.")
+    
     init_db()
-    app = ApplicationBuilder().token(TOKEN).build()
+    app = ApplicationBuilder().token(bot_token).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("tips", tips))
     app.add_handler(CommandHandler("subscribe", subscribe))
