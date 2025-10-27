@@ -1,5 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
+from typing import Optional, Set
 
 
 class Subject(ABC):
@@ -21,7 +22,7 @@ class RealSubject(Subject):
 class Proxy(Subject):
     """代理：在客户端和真实主题之间控制访问、做缓存、记录等。"""
 
-    def __init__(self, real_subject: RealSubject, allowed_users: set[str] | None = None):
+    def __init__(self, real_subject: RealSubject, allowed_users: Optional[Set[str]] = None):
         self._real = real_subject
         self._allowed = allowed_users or set()
 
