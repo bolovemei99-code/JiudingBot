@@ -1,1 +1,1 @@
-{"build":{"builder":"heroku/buildpacks:20","buildCommand":"pip install -r requirements.txt"},"start":{"command":"python main.py"},"envs":{"BOT_TOKEN":"7263013347:AAFGaRqixDkGz4YZJyFA4PmQXKNJMAj236k"}}
+{"build":{"builder":"heroku/buildpacks:20","buildCommand":"pip install -r requirements.txt"},"start":{"command":"python bot.py"},"envs":{"BOT_TOKEN":"7263013347:AAFGaRqixDkGz4YZJyFA4PmQXKNJMAj236k"}}
