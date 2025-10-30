@@ -3,7 +3,7 @@ NPM := $(shell which npm || echo npm)
 JAVAC := $(shell which javac || echo javac)
 JAVA := $(shell which java || echo java)
 
-.PHONY: all deps test run-python run-ts run-java clean
+.PHONY: all deps test run-python run-ts run-java clean check-deploy
 
 all: deps test
 
@@ -35,3 +35,6 @@ run-java: java-build
 
 clean:
 	rm -rf examples/typescript/dist examples/java/*.class examples/java/*.d
+
+check-deploy:
+	$(PYTHON) check_deployment.py
