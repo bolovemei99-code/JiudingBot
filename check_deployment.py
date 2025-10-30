@@ -107,13 +107,19 @@ def check_bot_configuration():
             content = f.read()
             
             # 检查是否使用环境变量
-            if 'os.environ.get' not in content and 'BOT_TOKEN' not in content:
+            # 需要同时包含 os.environ.get 和 BOT_TOKEN 才算正确使用
+            has_environ_get = 'os.environ.get' in content or 'os.getenv' in content
+            has_bot_token_ref = 'BOT_TOKEN' in content
+            
+            if has_environ_get and has_bot_token_ref:
+                print("  ✓ bot.py 使用环境变量")
+            else:
                 issues.append("  - bot.py 未使用环境变量获取 BOT_TOKEN")
                 print("  ❌ bot.py 未正确使用环境变量")
-            else:
-                print("  ✓ bot.py 使用环境变量")
             
             # 检查是否有硬编码的 token (只是警告)
+            # Telegram bot token 格式通常是: 10位数字:35个字符
+            # 这个模式可能随 Telegram 更新而改变
             token_pattern = r'\d{10}:\w{35}'
             if re.search(token_pattern, content):
                 print("  ⚠️  警告: bot.py 中可能包含硬编码的 token")
