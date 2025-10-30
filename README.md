@@ -68,3 +68,42 @@ npx ts-node proxy.ts
 python examples/proxy_python_cache.py
 ```
 
+## 部署检查
+
+在部署到生产环境之前，应该运行部署条件检查以确保所有必需的配置都已正确设置。
+
+### 运行部署检查
+
+```bash
+# 使用 Python 直接运行
+python check_deployment.py
+
+# 或使用 Makefile
+make check-deploy
+```
+
+### 检查内容
+
+部署检查脚本会验证以下条件：
+
+1. **环境变量检查**
+   - `BOT_TOKEN`: Telegram Bot 认证令牌
+   - `RAILWAY_TOKEN`: Railway 部署令牌
+
+2. **必需文件检查**
+   - `bot.py`: 主程序文件
+   - `requirements.txt`: Python 依赖
+   - `railway.json`: Railway 配置
+
+3. **依赖配置检查**
+   - requirements.txt 不为空
+   - railway.json 格式正确且包含必需配置
+
+4. **Bot 配置检查**
+   - 验证 bot.py 使用环境变量
+   - 检查是否存在硬编码的敏感信息
+
+### CI/CD 集成
+
+部署检查已集成到 `.github/workflows/ci-cd.yml` 中，在实际部署前自动运行。如果检查失败，部署将被中止。
+
